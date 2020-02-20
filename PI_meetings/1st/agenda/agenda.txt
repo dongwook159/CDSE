@@ -13,7 +13,7 @@ Participants:
 ============================================
 
 2:00 -- 2:30 pm: Dongwook (and Sean) on the overall progress report
-2:30 -- 3:20 pm: Ian's report on the recent progress on GP FVM (hydro)
+2:30 -- 3:20 pm: Ian's report on the recent progress of GP FVM (hydro)
 3:20 -- 3:30 pm: break
 3:30 -- 4:00 pm: Adam's GP + ADER-CG in FLASH; Sean's \ell parameter optimization
 4:00 -- 4:30 pm: Ian's report on divergence-free GP-MHD
