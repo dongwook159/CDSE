@@ -1,0 +1,80 @@
+On 2/26/20 9:41 AM, Couch, Sean wrote:
+> Also, Carlo would you mind putting into writing the responses we
+> discussed to the questions about RBF vs. GP in the little writeup I
+> shared from Yeoson and Andrew? I could try to recall your answer
+> myself, but that is a game of telephone that would not go well….
+>
+> Sean
+
+On the general differences in outlook between scattered data approximation
+by RBF and Gaussian process modeling, I'd say that the two approaches share
+some mathematical commonalities, which are generalized in different directions,
+for different purposes:
+
+RBFs generalize (at least) in the direction of considering kernels that are
+only "conditionally" positive-definite, in directions constrained by a subspace
+of polynomial basis functions, as per p. 1 of Andrew's and Hyoseon's writeup.
+The motivation for this is, I believe, to generalize the space of possible
+kernels beyond the strictly positive-definite kernels without compromising
+solvability of the linear system, so as to gain access to a wider and more
+flexible space of approximants.
+
+GP modeling is not strictly about function approximation, but rather about
+non-parametric statistical modeling.  The idea is, informally, to place
+a "prior" Gaussian distribution on a Hilbert space of functions, and use the rules
+of conditional probability to infer transformations of that distribution
+consequent on conditioning on sample data.  GPs require that kernels, being
+covariances, be strictly non-negative definite, and in this sense are less
+general than RBF approximants.  On the other hand, GP modeling generalizes
+RBFs in that
+
+(1) Kernels need not be "radial" (i.e. translation-invariant);
+
+(2) Functions may be offset by arbitrary "mean functions" (not just
+     finite-order polynomials);
+
+(3) A natural fit quality metric is supplied by the likelihood function,
+     which can help step among hyper-parametrized kernels to determine which
+     member of a family corresponds to the "best" Hilbert space of functions
+     (i.e. which scales, order of differentiability, etc. seem to best match
+     the data);
+
+(4) The Bayesian interpretation of "modify prior with data, marginalize latent
+     values to obtain marginal likelihood" furnishes a natural interpretation
+     for the quadratic regularization term that is often added to the data-fit
+     term as an ad-hoc regularizer in standard optimization problems.
+
+Now, as to the specific questions asked by Andrew and Hyoseon in their write-up:
+
+(1) "How did you find $\overline{f}(x_*)$ in (7) and (8) and how accurate are they?"
+
+That term comes from the assumed prior mean function.  The reason for including
+a mean function in the model is that the data may not have been mean-subtracted,
+and consequently the addition of a mean term helps the covariance term not work
+as hard in order to obtain a reasonable approximation.  When the interpolation moves
+too far from any training points (as measured by the length scale characteristic of
+the kernel) the approximant tends to "sag" back to the prior value.  Using a mean
+function adapted to the data means that the approximant will sag to this mean, instead
+of to zero.
+
+Typically what is done is to assume the mean "function" is in fact a constant,
+and compute the constant by optimizing the likelihood (this can be done
+analytically).  So in this case $\overline{f}(x_*)$ is that constant.  This is,
+I think, equivalent to an RBF approximant using m=1 (i.e. the constant polynomial)
+on p. 1 of the write-up.  As noted in (2) above, there is no necessity that this
+should be a polynomial at all, it is merely a convenience to get a bit more
+flexibility into the approximant.  I know of no inherent measure of "how accurate"
+(or "how much more accurate") this added term is. Such statements
+would be data dependent, and probably have to be phrased in terms of convergence
+in probability or in mean-square.  Not saying such things aren't known, I just
+don't know them myself.
+
+(2) "If the covariance function K is chosen as just a Gaussian function and a zero
+mean is assumed, i.e., $\overline{f}(x_*)=0$, in (7), what is the difference between this ap-
+proximation and the RBF interpolation?"
+
+None whatsoever, I believe.
+
+I hope that's helpful.
+
+Carlo
