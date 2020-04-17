@@ -1,0 +1,5 @@
+# Latex related stuff
+*.out
+*.log
+*.aux
+*~
